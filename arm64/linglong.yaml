@@ -1,0 +1,59 @@
+version: "1"
+
+package:
+  id: org.deepin.driver.display.nvidia.580-95-05
+  name: NVIDIA-Linux-x86_64-580-95-05
+  version: 1.0.0.0
+  kind: extension
+  description: |
+    nvidia display driver version 580.95.05
+
+base: org.deepin.base/25.2.1 #set the base environment, this can be changed.
+
+sources:
+  - kind: file
+    url: https://cn.download.nvidia.com/XFree86/aarch64/580.95.05/NVIDIA-Linux-aarch64-580.95.05.run
+    digest: ccb4426e98a29367c60daf9df34c2a577655d54d5be25463ccd409b0b2e52029
+
+build: |
+  # 在这里指定N卡驱动版本
+  export NVIDIA_DRIVER_VER=580.95.05
+
+  # 新建工作目录
+  mkdir -p nvidia-graphics-drivers
+
+  # 复制run文件
+  cp ./linglong/sources/*.run ./nvidia-graphics-drivers/target.run
+
+  # 进入工作目录
+  cd nvidia-graphics-drivers
+
+  # 指定N卡驱动解压后的目录位置
+  driver_name=NVIDIA-Linux-x86_64-${NVIDIA_DRIVER_VER}
+
+  rm -rf ${driver_name}
+
+  # 解压驱动
+  chmod +x target.run && ./target.run -x
+
+  mkdir -p $PREFIX/orig
+  cp -r "${driver_name}"/* $PREFIX/orig/
+
+  mkdir -p $PREFIX/glvnd/egl_vendor.d/
+  ln -st $PREFIX/glvnd/egl_vendor.d/ $PREFIX/orig/10_nvidia.json
+
+  mkdir -p $PREFIX/egl/egl_external_platform.d/
+  ln -st $PREFIX/egl/egl_external_platform.d/ $PREFIX/orig/10_nvidia.json
+  ln -st $PREFIX/egl/egl_external_platform.d/ $PREFIX/orig/15_nvidia_gbm.json
+  ln -st $PREFIX/egl/egl_external_platform.d/ $PREFIX/orig/20_nvidia_xcb.json
+  ln -st $PREFIX/egl/egl_external_platform.d/ $PREFIX/orig/20_nvidia_xlib.json
+
+  mkdir -p $PREFIX/vulkan/icd.d/
+  ln -st $PREFIX/vulkan/icd.d/ $PREFIX/orig/nvidia_icd.json
+
+  mkdir -p $PREFIX/etc
+  cp /project/ld.so.conf $PREFIX/etc/
+
+  ldconfig
+
+  echo 'build done'
