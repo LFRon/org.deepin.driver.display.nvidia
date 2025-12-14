@@ -1,23 +1,23 @@
 version: "1"
 
 package:
-  id: org.deepin.driver.display.nvidia.580-105-08
-  name: NVIDIA-Linux-x86_64-580-105-08
+  id: org.deepin.driver.display.nvidia.590-44-01
+  name: NVIDIA-Linux-x86_64-590-44-01
   version: 1.0.0.0
   kind: extension
   description: |
-    nvidia display driver version 580.105.08
+    nvidia display driver version 590.44.01
 
-base: org.deepin.base/25.2.1 #set the base environment, this can be changed.
+base: org.deepin.base/25.2.1 # Set the base environment, this can be changed.
 
 sources:
   - kind: file
-    url: https://cn.download.nvidia.com/XFree86/Linux-x86_64/580.105.08/NVIDIA-Linux-x86_64-580.105.08.run
-    digest: d9c6e8188672f3eb74dd04cfa69dd58479fa1d0162c8c28c8d17625763293475
+    url: https://cn.download.nvidia.com/XFree86/Linux-x86_64/590.44.01/NVIDIA-Linux-x86_64-590.44.01.run
+    digest: 55b91568ac0495a6b3a237f19079f3fe737fe68964d777b3930fc442384a3e6b
 
 build: |
   # 在这里指定N卡驱动版本
-  export NVIDIA_DRIVER_VER=580.105.08
+  export NVIDIA_DRIVER_VER=590.44.01
 
   # 新建工作目录
   mkdir -p nvidia-graphics-drivers
